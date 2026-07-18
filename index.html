@@ -1,38 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exchange Rates</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌍 Exchange Rates (BDT)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
+    h1 { text-align: center; color: #2c3e50; }
+    .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input { padding: 10px; margin: 10px 0; width: 100%; max-width: 300px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #3498db; color: white; }
+    tr:hover { background: #f1f1f1; }
+    #lastUpdated { text-align: center; color: #777; margin-top: 15px; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>🌍 বাংলাদেশি টাকা এক্সচেঞ্জ রেট</h1>
+    
+    <input type="number" id="amount" value="100" placeholder="টাকার পরিমাণ">
+    <input type="text" id="search" placeholder="দেশ বা কারেন্সি সার্চ করুন...">
+    
+    <table>
+      <thead>
+        <tr>
+          <th>দেশ</th>
+          <th>কোড</th>
+          <th>রেট (১০০ টাকায়)</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    
+    <p id="lastUpdated"></p>
+  </div>
 
-<div class="container">
-
-<h1>🌍 Exchange Rates</h1>
-
-<input type="number" id="amount" value="100" placeholder="Enter BDT Amount">
-
-<input type="text" id="search" placeholder="Search Country or Currency Code">
-
-<table id="rateTable">
-<thead>
-<tr>
-<th>Country</th>
-<th>Code</th>
-<th>Rate</th>
-</tr>
-</thead>
-
-<tbody id="tbody">
-</tbody>
-
-</table>
-
-</div>
-
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
