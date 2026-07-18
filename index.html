@@ -8,31 +8,36 @@
   <style>
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
     .logo {
-      width: 90px;
-      height: 90px;
-      border-radius: 12px;
-      margin-bottom: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     h1 {
-      margin: 0;
+      margin: 12px 0 0 0;
       color: #2c3e50;
+    }
+    .note {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     
-    <!-- Header with Logo -->
     <div class="header">
       <img src="logo.png" alt="ZAR Wallet Logo" class="logo">
       <h1>ZAR Wallet Exchange Rate</h1>
     </div>
     
     <div class="controls">
-      <input type="number" id="amount" value="100" placeholder="Enter ZAR $ Amount">
+      <input type="number" id="amount" value="1" placeholder="Enter multiplier (1 = 100 BDT)">
       <input type="text" id="search" placeholder="Search by country or currency...">
     </div>
 
@@ -48,8 +53,8 @@
     </table>
 
     <p id="lastUpdated"></p>
-    <p style="text-align:center; font-size:14px; color:#666; margin-top:10px;">
-      All rates are calculated based on 100 BDT
+    <p class="note">
+      All rates are based on <strong>100 BDT</strong> × multiplier
     </p>
   </div>
 
