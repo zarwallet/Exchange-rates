@@ -2,33 +2,44 @@ const tbody = document.getElementById("tbody");
 const amountInput = document.getElementById("amount");
 const searchInput = document.getElementById("search");
 
-const countries = [
-  { country: "Bangladesh", code: "BDT", symbol: "৳" },
-  { country: "United States", code: "USD", symbol: "$" },
-  { country: "India", code: "INR", symbol: "₹" },
-  { country: "Pakistan", code: "PKR", symbol: "₨" },
-  { country: "Saudi Arabia", code: "SAR", symbol: "﷼" },
-  { country: "United Arab Emirates", code: "AED", symbol: "د.إ" },
-  { country: "South Africa", code: "ZAR", symbol: "R" },
-  { country: "United Kingdom", code: "GBP", symbol: "£" },
-  { country: "Japan", code: "JPY", symbol: "¥" },
-  { country: "Canada", code: "CAD", symbol: "C$" }
-];
-
+let countries = [];
 let rates = {};
 
-fetch("rates.json")
-  .then(res => res.json())
-  .then(data => {
-    rates = data.rates;
-    loadTable();
-  });
+async function loadData() {
+  try {
+    const countryRes = await fetch("https://restcountries.com/v3.1/all?fields=name,currencies");
+    const countryData = await countryRes.json();
 
-function loadTable() {
-  tbody.innerHTML = "";
+    const rateRes = await fetch("https://open.er-api.com/v6/latest/BDT");
+    const rateData = await rateRes.json();
+
+    rates = rateData.rates;
+
+    countries = countryData
+      .filter(c => c.currencies)
+      .map(c => {
+        const code = Object.keys(c.currencies)[0];
+        return {
+          country: c.name.common,
+          code: code
+        };
+      })
+      .sort((a, b) => a.country.localeCompare(b.country));
+
+    renderTable();
+
+  } catch (err) {
+    tbody.innerHTML =
+      "<tr><td colspan='3'>Failed to load exchange rates.</td></tr>";
+  }
+}
+
+function renderTable() {
 
   const amount = Number(amountInput.value) || 100;
   const search = searchInput.value.toLowerCase();
+
+  tbody.innerHTML = "";
 
   countries
     .filter(c =>
@@ -36,16 +47,22 @@ function loadTable() {
       c.code.toLowerCase().includes(search)
     )
     .forEach(c => {
-      const value = (rates[c.code] || 0) * amount;
+
+      const rate = rates[c.code];
+
+      if (!rate) return;
 
       tbody.innerHTML += `
       <tr>
         <td>${c.country}</td>
         <td>${c.code}</td>
-        <td>${c.symbol}${value.toFixed(2)}</td>
+        <td>${(amount * rate).toFixed(2)}</td>
       </tr>`;
     });
+
 }
 
-amountInput.addEventListener("input", loadTable);
-searchInput.addEventListener("input", loadTable);
+amountInput.addEventListener("input", renderTable);
+searchInput.addEventListener("input", renderTable);
+
+loadData();
