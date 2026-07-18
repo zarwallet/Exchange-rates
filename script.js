@@ -13,33 +13,39 @@ const CACHE_DURATION = 30 * 60 * 1000; // ৩০ মিনিট
 
 async function loadData() {
   try {
-    // === Countries Cache (খুব কম পরিবর্তন হয়) ===
+    // === Countries (এখন স্থির লিস্ট + ক্যাশ) ===
     const cachedCountries = localStorage.getItem(CACHE_KEY_COUNTRIES);
     
     if (cachedCountries) {
       countries = JSON.parse(cachedCountries);
+      console.log("✅ Cached countries loaded");
     } else {
-      const countryRes = await fetch("https://restcountries.com/v3.1/all?fields=name,currencies");
-      const countryData = await countryRes.json();
-
-      countries = countryData
-        .filter(c => c.currencies)
-        .map(c => {
-          const code = Object.keys(c.currencies)[0];
-          return {
-            country: c.name.common,
-            code: code
-          };
-        })
-        .sort((a, b) => a.country.localeCompare(b.country));
-
+      // ফলব্যাক: জনপ্রিয় কারেন্সি লিস্ট (স্থির)
+      countries = [
+        { country: "United States", code: "USD" },
+        { country: "Eurozone", code: "EUR" },
+        { country: "United Kingdom", code: "GBP" },
+        { country: "India", code: "INR" },
+        { country: "Japan", code: "JPY" },
+        { country: "China", code: "CNY" },
+        { country: "Saudi Arabia", code: "SAR" },
+        { country: "Canada", code: "CAD" },
+        { country: "Australia", code: "AUD" },
+        { country: "Singapore", code: "SGD" },
+        { country: "Malaysia", code: "MYR" },
+        { country: "UAE", code: "AED" },
+        { country: "Pakistan", code: "PKR" },
+        { country: "Nepal", code: "NPR" },
+        { country: "Sri Lanka", code: "LKR" },
+        { country: "Thailand", code: "THB" },
+        { country: "South Korea", code: "KRW" }
+      ];
       localStorage.setItem(CACHE_KEY_COUNTRIES, JSON.stringify(countries));
     }
 
-    // === Exchange Rates Cache (প্রতি ৩০ মিনিটে আপডেট) ===
+    // === Exchange Rates Cache ===
     const cachedRates = localStorage.getItem(CACHE_KEY_RATES);
     const cacheTime = localStorage.getItem(CACHE_KEY_LAST_UPDATE);
-
     const now = Date.now();
 
     if (cachedRates && cacheTime && (now - parseInt(cacheTime) < CACHE_DURATION)) {
@@ -51,10 +57,9 @@ async function loadData() {
 
       if (rateData.result === "success") {
         rates = rateData.rates;
-
         localStorage.setItem(CACHE_KEY_RATES, JSON.stringify(rates));
         localStorage.setItem(CACHE_KEY_LAST_UPDATE, now.toString());
-        console.log("✅ Fresh rates loaded and cached");
+        console.log("✅ Fresh rates loaded");
       }
     }
 
@@ -62,16 +67,14 @@ async function loadData() {
 
   } catch (err) {
     console.error("Error:", err);
-    
-    // ক্যাশে থাকলে তবুও দেখাবে
     if (Object.keys(rates).length > 0) {
       renderTable();
     } else {
       tbody.innerHTML = `
         <tr>
-          <td colspan="3" style="text-align:center; color:red;">
-            Failed to load exchange rates.<br>
-            <small>Please check your internet connection.</small>
+          <td colspan="3" style="text-align:center; color:red; padding:20px;">
+            Unable to load data.<br>
+            <small>Please check internet connection and refresh.</small>
           </td>
         </tr>`;
     }
@@ -83,3 +86,34 @@ function renderTable() {
   const search = searchInput.value.toLowerCase().trim();
 
   tbody.innerHTML = "";
+
+  const filtered = countries.filter(c =>
+    c.country.toLowerCase().includes(search) || 
+    c.code.toLowerCase().includes(search)
+  );
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No matching currency found</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(c => {
+    const rate = rates[c.code];
+    if (!rate) return;
+
+    const converted = (amount * rate).toFixed(2);
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${c.country}</td>
+        <td><strong>${c.code}</strong></td>
+        <td>${converted}</td>
+      </tr>`;
+  });
+}
+
+// Event Listeners
+amountInput.addEventListener("input", renderTable);
+searchInput.addEventListener("input", renderTable);
+
+window.addEventListener("load", loadData);
