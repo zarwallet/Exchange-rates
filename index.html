@@ -3,17 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌍 BDT Exchange Rates</title>
+  <title>ZAR Wallet Exchange Rate</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      margin: 0;
+      color: #2c3e50;
+    }
+  </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>🌍 BDT Exchange Rates</h1>
+    
+    <!-- Header with Logo -->
+    <div class="header">
+      <img src="logo.png" alt="ZAR Wallet Logo" class="logo">
+      <h1>ZAR Wallet Exchange Rate</h1>
+    </div>
     
     <div class="controls">
-      <input type="number" id="amount" value="100" placeholder="Enter BDT Amount">
-      <input type="text" id="search" placeholder="Search by country or currency code...">
+      <input type="number" id="amount" value="100" placeholder="Enter ZAR $ Amount">
+      <input type="text" id="search" placeholder="Search by country or currency...">
     </div>
 
     <table id="rateTable">
@@ -21,13 +41,16 @@
         <tr>
           <th>Country</th>
           <th>Currency Code</th>
-          <th>Rate (for 100 BDT)</th>
+          <th>Rate</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
     </table>
 
     <p id="lastUpdated"></p>
+    <p style="text-align:center; font-size:14px; color:#666; margin-top:10px;">
+      All rates are calculated based on 100 BDT
+    </p>
   </div>
 
   <script src="script.js"></script>
