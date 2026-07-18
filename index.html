@@ -11,20 +11,21 @@
       margin-bottom: 25px;
     }
     .logo {
-      width: 100px;
-      height: 100px;
+      width: 110px;
+      height: 110px;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
     }
     h1 {
-      margin: 12px 0 0 0;
+      margin: 8px 0 0 0;
       color: #2c3e50;
     }
     .note {
       text-align: center;
       font-size: 14px;
-      color: #666;
-      margin-top: 10px;
+      color: #555;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -32,12 +33,12 @@
   <div class="container">
     
     <div class="header">
-      <img src="logo.png" alt="ZAR Wallet Logo" class="logo">
+      <img src="IMG_20260718_091823.jpg" alt="ZAR Wallet Logo" class="logo">
       <h1>ZAR Wallet Exchange Rate</h1>
     </div>
     
     <div class="controls">
-      <input type="number" id="amount" value="1" placeholder="Enter multiplier (1 = 100 BDT)">
+      <input type="number" id="amount" value="1" placeholder="Enter ZAR $ Amount">
       <input type="text" id="search" placeholder="Search by country or currency...">
     </div>
 
@@ -54,7 +55,7 @@
 
     <p id="lastUpdated"></p>
     <p class="note">
-      All rates are based on <strong>100 BDT</strong> × multiplier
+      1 ZAR $ = 100 BDT (All rates calculated accordingly)
     </p>
   </div>
 
