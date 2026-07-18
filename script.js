@@ -107,7 +107,6 @@ async function loadData() {
     if (Object.keys(rates).length > 0) renderTable();
   }
 }
-
 function renderTable() {
   const zarMultiplier = Number(amountInput.value) || 1;
   const baseBDT = 100;
@@ -116,42 +115,20 @@ function renderTable() {
   tbody.innerHTML = "";
 
   // Bangladesh সবসময় প্রথমে
-  if (
-    searchTerm === "" ||
-    "bangladesh".includes(searchTerm) ||
-    "bdt".includes(searchTerm)
-  ) {
-    tbody.innerHTML += `
-      <tr>
-        <td>Bangladesh</td>
-        <td><strong>BDT</strong></td>
-        <td>${(baseBDT * zarMultiplier).toFixed(2)}</td>
-      </tr>`;
-  }
+  tbody.innerHTML += `
+    <tr>
+      <td>Bangladesh</td>
+      <td><strong>BDT</strong></td>
+      <td>${(baseBDT * zarMultiplier).toFixed(2)}</td>
+    </tr>
+  `;
 
   const filtered = countries.filter(c =>
     c.country.toLowerCase().includes(searchTerm) ||
     c.code.toLowerCase().includes(searchTerm)
   );
 
-  if (filtered.length === 0 && searchTerm !== "" &&
-      !"bangladesh".includes(searchTerm) &&
-      !"bdt".includes(searchTerm)) {
-
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="3" style="text-align:center; padding:20px;">
-          No results found
-        </td>
-      </tr>`;
-    return;
-  }
-
   filtered.forEach(c => {
-
-    // Bangladesh আবার দেখাবে না
-    if (c.code === "BDT") return;
-
     const rate = rates[c.code];
     if (!rate) return;
 
@@ -162,43 +139,8 @@ function renderTable() {
         <td>${c.country}</td>
         <td><strong>${c.code}</strong></td>
         <td>${finalRate}</td>
-      </tr>`;
-  });
-
-  lastUpdated.textContent = `Last updated: ${new Date().toLocaleString()}`;
-}
-  tbody.innerHTML = "";
-  // Bangladesh (Always First)
-tbody.innerHTML += `
-<tr>
-  <td>Bangladesh</td>
-  <td><strong>BDT</strong></td>
-  <td>100.00</td>
-</tr>`;
-
-  const filtered = countries.filter(c => 
-    c.country.toLowerCase().includes(searchTerm) || 
-    c.code.toLowerCase().includes(searchTerm)
-  );
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">No results found</td></tr>`;
-    return;
-  }
-
-  filtered.forEach(c => {
-    if (c.code === "BDT") return;
-    const rate = rates[c.code];
-    if (!rate) return;
-
-    const finalRate = (baseBDT * rate * zarMultiplier).toFixed(2);
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${c.country}</td>
-        <td><strong>${c.code}</strong></td>
-        <td>${finalRate}</td>
-      </tr>`;
+      </tr>
+    `;
   });
 
   lastUpdated.textContent = `Last updated: ${new Date().toLocaleString()}`;
