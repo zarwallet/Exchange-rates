@@ -115,6 +115,13 @@ function renderTable() {
   const searchTerm = searchInput.value.toLowerCase().trim();
 
   tbody.innerHTML = "";
+  // Bangladesh (Always First)
+tbody.innerHTML += `
+<tr>
+  <td>Bangladesh</td>
+  <td><strong>BDT</strong></td>
+  <td>100.00</td>
+</tr>`;
 
   const filtered = countries.filter(c => 
     c.country.toLowerCase().includes(searchTerm) || 
@@ -127,6 +134,7 @@ function renderTable() {
   }
 
   filtered.forEach(c => {
+    if (c.code === "BDT") return;
     const rate = rates[c.code];
     if (!rate) return;
 
