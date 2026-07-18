@@ -1,33 +1,33 @@
-const rates = {
-  BDT: 1,
-  USD: 0.0082,
-  EUR: 0.0070,
-  INR: 0.70,
-  PKR: 2.35,
-  SAR: 0.031,
-  AED: 0.030,
-  ZAR: 0.145
-};
-
-const countries = [
-  { country: "Bangladesh", code: "BDT", symbol: "৳" },
-  { country: "United States", code: "USD", symbol: "$" },
-  { country: "Eurozone", code: "EUR", symbol: "€" },
-  { country: "India", code: "INR", symbol: "₹" },
-  { country: "Pakistan", code: "PKR", symbol: "₨" },
-  { country: "Saudi Arabia", code: "SAR", symbol: "﷼" },
-  { country: "United Arab Emirates", code: "AED", symbol: "د.إ" },
-  { country: "South Africa", code: "ZAR", symbol: "R" }
-];
-
 const tbody = document.getElementById("tbody");
 const amountInput = document.getElementById("amount");
 const searchInput = document.getElementById("search");
 
+const countries = [
+  { country: "Bangladesh", code: "BDT", symbol: "৳" },
+  { country: "United States", code: "USD", symbol: "$" },
+  { country: "India", code: "INR", symbol: "₹" },
+  { country: "Pakistan", code: "PKR", symbol: "₨" },
+  { country: "Saudi Arabia", code: "SAR", symbol: "﷼" },
+  { country: "United Arab Emirates", code: "AED", symbol: "د.إ" },
+  { country: "South Africa", code: "ZAR", symbol: "R" },
+  { country: "United Kingdom", code: "GBP", symbol: "£" },
+  { country: "Japan", code: "JPY", symbol: "¥" },
+  { country: "Canada", code: "CAD", symbol: "C$" }
+];
+
+let rates = {};
+
+fetch("rates.json")
+  .then(res => res.json())
+  .then(data => {
+    rates = data.rates;
+    loadTable();
+  });
+
 function loadTable() {
   tbody.innerHTML = "";
 
-  const amount = parseFloat(amountInput.value) || 100;
+  const amount = Number(amountInput.value) || 100;
   const search = searchInput.value.toLowerCase();
 
   countries
@@ -36,19 +36,16 @@ function loadTable() {
       c.code.toLowerCase().includes(search)
     )
     .forEach(c => {
-      const tr = document.createElement("tr");
+      const value = (rates[c.code] || 0) * amount;
 
-      tr.innerHTML = `
+      tbody.innerHTML += `
+      <tr>
         <td>${c.country}</td>
         <td>${c.code}</td>
-        <td>${c.symbol}${(amount * rates[c.code]).toFixed(2)}</td>
-      `;
-
-      tbody.appendChild(tr);
+        <td>${c.symbol}${value.toFixed(2)}</td>
+      </tr>`;
     });
 }
 
 amountInput.addEventListener("input", loadTable);
 searchInput.addEventListener("input", loadTable);
-
-loadTable();
